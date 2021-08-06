@@ -89,7 +89,7 @@ app.put('/image', (req, res) => {
     if (user.id === id) {
       found = true;
       user.entries++;
-      return res.json(user);
+      return res.json(user.entries);
     }
   });
 
