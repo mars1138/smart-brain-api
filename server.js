@@ -1,38 +1,55 @@
 const express = require('express');
 const bcrypt = require('bcrypt-nodejs');
 const cors = require('cors');
+const knex = require('knex');
+
+const db = knex({
+  client: 'pg',
+  connection: {
+    host: '127.0.0.1',
+    user: 'postgres',
+    password: 'test',
+    database: 'smart-brain',
+  },
+});
+
+// TESTING
+// db.select('*')
+//   .from('users')
+//   .then(data => console.log(data));
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-const database = {
-  users: [
-    {
-      id: '123',
-      name: 'John',
-      email: 'john@gmail.com',
-      password: 'cookies',
-      entries: 0,
-      joined: new Date(),
-    },
-    {
-      id: '124',
-      name: 'Sally',
-      email: 'sally@gmail.com',
-      password: 'bananas',
-      entries: 0,
-      joined: new Date(),
-    },
-  ],
-  login: [
-    {
-      id: '987',
-      has: '',
-      email: 'john@gmail.com',
-    },
-  ],
-};
+// TESTING
+// const database = {
+//   users: [
+//     {
+//       id: '123',
+//       name: 'John',
+//       email: 'john@gmail.com',
+//       password: 'cookies',
+//       entries: 1,
+//       joined: new Date(),
+//     },
+//     {
+//       id: '124',
+//       name: 'Sally',
+//       email: 'sally@gmail.com',
+//       password: 'bananas',
+//       entries: 2,
+//       joined: new Date(),
+//     },
+//   ],
+//   login: [
+//     {
+//       id: '987',
+//       has: '',
+//       email: 'john@gmail.com',
+//     },
+//   ],
+// };
 
 app.get('/', (req, res) => {
   res.send(database.users);
@@ -52,48 +69,80 @@ app.post('/signin', (req, res) => {
 
 app.post('/register', (req, res) => {
   const { name, email, password } = req.body;
-  bcrypt.hash(password, null, null, function (err, hash) {
-    console.log(hash);
-  });
+  db('users')
+    .returning('*')
+    .insert({
+      email: email,
+      name: name,
+      joined: new Date(),
+    })
+    .then(user => {
+      res.json(user[0]); // make sure we are not potentially returning an array
+    })
+    .catch(err => res.status(400).json('Unable to register!'));
+  // bcrypt.hash(password, null, null, function (err, hash) {
+  //   console.log(hash);
+  // });
 
-  database.users.push({
-    id: '125',
-    name: name,
-    email: email,
-    entries: 0,
-    joined: new Date(),
-  });
-  res.json(database.users[database.users.length - 1]);
+  // TESTING:
+  // database.users.push({
+  //   id: '125',
+  //   name: name,
+  //   email: email,
+  //   entries: 0,
+  //   joined: new Date(),
+  // });
+  // res.json(database.users[database.users.length - 1]);
 });
 
 app.get('/profile/:id', (req, res) => {
-  console.log(req.params);
+  console.log('req.params: ', req.params);
   const { id } = req.params;
-  let found = false;
+  db.select('*')
+    .from('users')
+    .where({
+      id,
+    })
+    .then(user => {
+      console.log(user);
+      if (user.length) res.json(user[0]);
+      else res.status(400).json('User Not Found!');
+    })
+    .catch(err => res.status(400).json('Error getting user!'));
 
-  database.users.forEach(user => {
-    if (user.id === id) {
-      found = true;
-      return res.json(user);
-    }
-  });
-
-  if (!found) res.status(400).json('no such user found...');
+  // TESTING:
+  // database.users.forEach(user => {
+  //   if (user.id === id) {
+  //     found = true;
+  //     return res.json(user);
+  //   }
+  // });
+  // if (!found) res.status(400).json('no such user found...');
 });
 
 app.put('/image', (req, res) => {
+  console.log('req.body: ', req.body);
   const { id } = req.body;
-  let found = false;
+  db('users')
+    .where('id', '=', id)
+    .increment('entries', 1)
+    .returning('entries')
+    .then(entries => {
+      res.json(entries[0]);
+    })
+    .catch(err => res.status(400).json('unable to get entries!'));
 
-  database.users.forEach(user => {
-    if (user.id === id) {
-      found = true;
-      user.entries++;
-      return res.json(user.entries);
-    }
-  });
+  // TESTING:
+  // let found = false;
 
-  if (!found) res.status(400).json('no such user found...');
+  // database.users.forEach(user => {
+  //   if (user.id === id) {
+  //     found = true;
+  //     user.entries++;
+  //     return res.json(user.entries);
+  //   }
+  // });
+  // if (!found) res.status(400).json('no such user found...');
 });
 
 // bcrypt.hash('bacon', null, null, function (err, hash) {
