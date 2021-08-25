@@ -65,6 +65,9 @@ app.get('/', (req, res) => {
 app.put('/image', (req, res) => {
   image.handleImage(req, res, db);
 });
+app.post('/imageurl', (req, res) => {
+  image.handleApiCall(req, res);
+});
 
 app.post('/signin', (req, res) => {
   signin.handleSignin(req, res, db, bcrypt);
