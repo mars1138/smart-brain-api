@@ -39,11 +39,11 @@ const handleRegister = (req, res, db, bcrypt) => {
   //     res.json(user[0]); // make sure we are not potentially returning an array
   //   })
 
+  // TESTING:
   // bcrypt.hash(password, null, null, function (err, hash) {
   //   console.log(hash);
   // });
 
-  // TESTING:
   // database.users.push({
   //   id: '125',
   //   name: name,

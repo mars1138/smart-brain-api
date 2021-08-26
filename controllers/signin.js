@@ -27,6 +27,7 @@ const handleSignin = (req, res, db, bcrypt) => {
     .catch(err => res.status(400).json('Wrong credentials!!!'));
 
   // TESTING
+
   // //   res.json('signing in...');
   // if (
   //   req.body.email === database.users[0].email &&

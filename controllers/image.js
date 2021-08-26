@@ -30,7 +30,6 @@ const handleImage = (req, res, db) => {
 
   // TESTING:
   // let found = false;
-
   // database.users.forEach(user => {
   //   if (user.id === id) {
   //     found = true;

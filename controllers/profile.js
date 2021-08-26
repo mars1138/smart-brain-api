@@ -15,6 +15,7 @@ const handleProfile = db => (req, res) => {
     .catch(err => res.status(400).json('Error getting user!'));
 
   // TESTING:
+
   // database.users.forEach(user => {
   //   if (user.id === id) {
   //     found = true;

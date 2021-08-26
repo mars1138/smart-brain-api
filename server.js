@@ -37,7 +37,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// TESTING initial setup
+// TESTING during initial setup
 // const database = {
 //   users: [
 //     {
