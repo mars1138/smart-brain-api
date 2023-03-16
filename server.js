@@ -9,29 +9,30 @@ const profile = require('./controllers/profile');
 const register = require('./controllers/register');
 const signin = require('./controllers/signin');
 
-const db = knex({
-  client: 'pg',
-  connection: {
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false,
-    },
-  },
-});
-
-// TESTING
 // const db = knex({
 //   client: 'pg',
 //   connection: {
-//     host: '127.0.0.1',
-//     user: 'postgres',
-//     password: 'test',
-//     database: 'smart-brain',
+//     connectionString: process.env.DB_URL,
+//     ssl: {
+//       rejectUnauthorized: false,
+//     },
 //   },
 // });
+
+// TESTING;
+const db = knex({
+  client: `${process.env.DB_CLIENT}`,
+  connection: {
+    host: `${process.env.DB_HOST}`,
+    user: `${process.env.DB_USER}`,
+    password: `${process.env.DB_PASSWORD}`,
+    database: `${process.env.DB_NAME}`,
+  },
+});
+
 // db.select('*')
 //   .from('users')
-//   .then(data => console.log(data));
+//   .then((data) => console.log(data));
 
 const app = express();
 app.use(express.json());

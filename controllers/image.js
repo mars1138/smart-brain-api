@@ -1,17 +1,17 @@
 const Clarifai = require('clarifai');
 
 const app = new Clarifai.App({
-  apiKey: '3fed091650b6444a98384f167efe87aa',
+  apiKey: `${process.env.API_KEY}`,
 });
 
 const handleApiCall = (req, res) => {
   app.models
-    .predict(Clarifai.FACE_DETECT_MODEL, req.body.input)
-    .then(data => {
+    .predict('face-detection', req.body.input)
+    .then((data) => {
       console.log('Clarifai data: ', data);
       return res.json(data);
     })
-    .catch(err => res.status(400).json('Unable to work with API...'));
+    .catch((err) => res.status(400).json('Unable to work with API...'));
 };
 
 const handleImage = (req, res, db) => {
@@ -23,10 +23,10 @@ const handleImage = (req, res, db) => {
     .where('id', '=', id)
     .increment('entries', 1)
     .returning('entries')
-    .then(entries => {
+    .then((entries) => {
       res.json(entries[0]);
     })
-    .catch(err => res.status(400).json('unable to get entries!'));
+    .catch((err) => res.status(400).json('unable to get entries!'));
 
   // TESTING:
   // let found = false;
