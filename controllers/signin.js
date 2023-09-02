@@ -4,27 +4,27 @@ const handleSignin = (req, res, db, bcrypt) => {
     return res.status(400).json('Incorrect Form Submission!');
 
   db.select('email', 'hash')
-    .from('login')
+    .from('login2')
     .where('email', '=', email)
-    .then(data => {
+    .then((data) => {
       console.log(data);
       const isValid = bcrypt.compareSync(password, data[0].hash);
       console.log(isValid);
       if (isValid) {
         return db
           .select('*')
-          .from('users')
+          .from('users2')
           .where('email', '=', email)
-          .then(user => {
+          .then((user) => {
             console.log('User: ', user);
             res.json(user[0]);
           })
-          .catch(err => res.status(400).json('Unable to get user!'));
+          .catch((err) => res.status(400).json('Unable to get user!'));
       } else {
         res.status(400).json('Wrong credentials!');
       }
     })
-    .catch(err => res.status(400).json('Wrong credentials!!!'));
+    .catch((err) => res.status(400).json('Wrong credentials!!!'));
 
   // TESTING
 

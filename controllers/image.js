@@ -19,7 +19,7 @@ const handleImage = (req, res, db) => {
   const { id } = req.body;
 
   // can use .increment function instead of doing a Select
-  db('users')
+  db('users2')
     .where('id', '=', id)
     .increment('entries', 1)
     .returning('entries')

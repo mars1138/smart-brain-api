@@ -1,18 +1,18 @@
 // advanced function syntax
-const handleProfile = db => (req, res) => {
+const handleProfile = (db) => (req, res) => {
   console.log('req.params: ', req.params);
   const { id } = req.params;
   db.select('*')
-    .from('users')
+    .from('users2')
     .where({
       id,
     })
-    .then(user => {
+    .then((user) => {
       console.log(user);
       if (user.length) res.json(user[0]);
       else res.status(400).json('User Not Found!');
     })
-    .catch(err => res.status(400).json('Error getting user!'));
+    .catch((err) => res.status(400).json('Error getting user!'));
 
   // TESTING:
 
